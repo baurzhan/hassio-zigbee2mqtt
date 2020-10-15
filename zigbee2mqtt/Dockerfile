@@ -16,6 +16,12 @@ RUN apk add --update --no-cache curl jq nodejs npm socat \
   jq -n --arg commit $ZIGBEE2MQTT_VERSION '{"hash": $commit }' > .hash.json && \
   npm install --unsafe-perm -g pm2 && \
   npm install --unsafe-perm && \
+  && cd node_modules/zigbee-herdsman \
+  && npm prune --production \
+  && cd ../../ \
+  && ((curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | bash \
+  && ./bin/node-prune) || true) \
+  && rm -rf "/$ARCHIVE.tar.gz" \
   apk del make gcc g++ python2 linux-headers udev && \
   rm -rf docs test images scripts data docker LICENSE README.md update.sh
 
